@@ -1,0 +1,31 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="18">
+            <item index="0" class="java.lang.String" itemvalue="traitlets" />
+            <item index="1" class="java.lang.String" itemvalue="jupyter-core" />
+            <item index="2" class="java.lang.String" itemvalue="parso" />
+            <item index="3" class="java.lang.String" itemvalue="python-dateutil" />
+            <item index="4" class="java.lang.String" itemvalue="nbformat" />
+            <item index="5" class="java.lang.String" itemvalue="Send2Trash" />
+            <item index="6" class="java.lang.String" itemvalue="packaging" />
+            <item index="7" class="java.lang.String" itemvalue="PyQt5-sip" />
+            <item index="8" class="java.lang.String" itemvalue="mkl-random" />
+            <item index="9" class="java.lang.String" itemvalue="Jinja2" />
+            <item index="10" class="java.lang.String" itemvalue="prometheus-client" />
+            <item index="11" class="java.lang.String" itemvalue="PyQtChart" />
+            <item index="12" class="java.lang.String" itemvalue="PyQtWebEngine" />
+            <item index="13" class="java.lang.String" itemvalue="mkl-fft" />
+            <item index="14" class="java.lang.String" itemvalue="PyQt5" />
+            <item index="15" class="java.lang.String" itemvalue="pyzmq" />
+            <item index="16" class="java.lang.String" itemvalue="prompt-toolkit" />
+            <item index="17" class="java.lang.String" itemvalue="mkl-service" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
