@@ -1,5 +1,5 @@
 # KasPI
-
+![image](https://github.com/kkkasprzyk/KasPI/assets/56090710/8d583dbc-fbf3-4777-a113-3d69e35031e8)
 
 # Project: Intelligent traffic measurement system based on Raspberry Pi device and camera
 
@@ -24,5 +24,5 @@ This project is a Python application for counting objects (e.g., cars, people) i
   - Integration of GUI using Tkinter.
   - Object counting based on YOLO object detection model.
 
-![image](https://github.com/kkkasprzyk/KasPI/assets/56090710/8d583dbc-fbf3-4777-a113-3d69e35031e8)
+
 
