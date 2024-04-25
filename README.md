@@ -1,7 +1,7 @@
 # KasPI
-Intelligent traffic measurement system based on Raspberry Pi device and camera
 
-# Project: Object Counting with GUI Integration
+
+# Project: Intelligent traffic measurement system based on Raspberry Pi device and camera
 
 ## Description
 This project is a Python application for counting objects (e.g., cars, people) in a video stream. It utilizes the YOLO object detection model for detecting and tracking objects in real-time. The application also features a graphical user interface (GUI) created using the Tkinter library, allowing users to interact with the program easily.
