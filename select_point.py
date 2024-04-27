@@ -1,7 +1,7 @@
-## Revision of code 25.04.2024 - Release 1 ##  -- > select_point.py module
+## Revision of code 27.04.2024 - Release 3 ##  -- > main.py module
 
 from config_kaspi import *
-def select_line_points(video_path):
+def select_line_points(video_path,x_resolution,y_resolution):
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), "Error reading video file"
 
@@ -16,7 +16,7 @@ def select_line_points(video_path):
             break
 
         # Wyświetl obraz wideo
-        frame = cv2.resize(frame,(1920,1080))
+        frame = cv2.resize(frame,(x_resolution,y_resolution))
         cv2.imshow('Select Points', frame)
 
         # Czekaj na klawisz 'c' aby kontynuować

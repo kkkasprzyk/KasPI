@@ -1,7 +1,8 @@
 from config_kaspi import *
 import threading
-## Revision of code 25.04.2024 - Release 1 ##  -- > gui_kaspi.py module
-
+## Revision of code 27.04.2024 - Release 3 ##  -- > gui_kaspi.py module
+import sys
+import config_kaspi
 
 
 print("""
@@ -17,21 +18,24 @@ print("""
                                                                                         """)
 
 
-def start_program(video_path):
-    threading.Thread(target=select_and_initialize, args=(video_path,)).start()
+# def start_program(video_path):
+#     global init_thread
+#     init_thread = threading.Thread(target=select_and_initialize, args=(video_path,))
+#     init_thread.start()
 
 def select_and_initialize(video_path):
-    select_line_points(video_path)
-    initialize_yolo_model(video_path)
+    initialize_yolo_model(select_line_points(video_path,1920,1080),video_path,4,1920,1080)
 
 def quit_program(root):
-    root.quit()
+    print("########   ###      KONIEC   ###     ###############")
+    sys.exit("Exiting the code with sys.exit()!")
+    init_thread
 
 
 def gui_kaspi(video_path):
     # Tworzenie głównego okna
     root = tk.Tk()
-    root.title("Moje pierwsze GUI")
+    root.title("KasPi 2024")
 
     # Ustawienie tła
     background_image = Image.open("8275340.jpg")
@@ -41,7 +45,7 @@ def gui_kaspi(video_path):
     root.geometry("800x600")
     # Funkcja do obsługi przycisku Start
     def start_button_click():
-        start_program(video_path)
+        select_and_initialize(video_path)
 
     # Funkcja do obsługi przycisku Quit
     def quit_button_click():
