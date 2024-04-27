@@ -1,6 +1,8 @@
+## Revision of code 27.04.2024 - Release 3 ##  -- > main.py module
 from config_kaspi import *
 
-def initialize_yolo_model(video_path):
+
+def initialize_yolo_model(line_points,video_path):
 
     print("############### START MODULE initialize_yolo_model()  ##############")
 
@@ -15,7 +17,7 @@ def initialize_yolo_model(video_path):
 
     w, h, fps = (int(video_to_process.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
 
-    line_points = select_line_points(video_path=video_path)  # line or region points
+    #line_points = select_line_points(video_path=video_path)  # line or region points
 
     classes_to_count = [0, 2]  # person and car classes for count
 
@@ -29,26 +31,26 @@ def initialize_yolo_model(video_path):
     counter = object_counter.ObjectCounter()
     counter.set_args(view_img=True,
                      reg_pts=line_points,
-                     classes_names=model.names,
+                     classes_names=yolo_model.names,
                      )
     frame_count=0
     in_counts = []
     out_counts = []
-    while cap.isOpened():
-        success = cap.grab()  # Skip decoding, grab frame only
+    while video_to_process.isOpened():
+        success = video_to_process.grab()  # Skip decoding, grab frame only
         if not success:
             break
         frame_count+=1
         if frame_count % 4 != 0:
             continue
-        success, im0 = cap.retrieve()  # Retrieve the grabbed frame and decode it
+        success, im0 = video_to_process.retrieve()  # Retrieve the grabbed frame and decode it
         if not success:
             break
 
         # Zmniejsz rozdzielczość obrazu
         im0 = cv2.resize(im0, (1920,1080))
 
-        tracks = model.track(im0, persist=True, show=True,
+        tracks = yolo_model.track(im0, persist=True, show=True,
                              classes=classes_to_count, verbose=True)
 
         im0 = counter.start_counting(im0, tracks)
@@ -69,7 +71,7 @@ def initialize_yolo_model(video_path):
         plt.pause(0.01)  # Pozwól wykresowi zaktualizować się
         plt.clf()  # Wyczyść aktualny wykres, aby narysować nowy
 
-    cap.release()
+    video_to_process.release()
     video_writer.release()
     cv2.destroyAllWindows()
-    print("KONIEC")
+    print("########   ###      KONIEC   ###     ###############")

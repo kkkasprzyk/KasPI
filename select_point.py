@@ -1,4 +1,4 @@
-## Revision of code 25.04.2024 - Release 1 ##  -- > select_point.py module
+## Revision of code 27.04.2024 - Release 3 ##  -- > main.py module
 
 from config_kaspi import *
 def select_line_points(video_path):

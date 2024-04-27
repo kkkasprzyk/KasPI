@@ -1,12 +1,10 @@
 
 
-## Revision of code 25.04.2024 - Release 1 ##  -- > main.py module
+## Revision of code 27.04.2024 - Release 3 ##  -- > main.py module
 
 ### IMPORTANT IMPORTS ###
 
 from config_kaspi import *
-## ### ### ### ### ### ###
-
 
 
 
@@ -17,5 +15,6 @@ if __name__ == '__main__':
         sys.exit()
 
     video_path = sys.argv[1]
+    print("video path: ", video_path)
     gui_kaspi(video_path)
 

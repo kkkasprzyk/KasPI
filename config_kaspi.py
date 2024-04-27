@@ -1,3 +1,5 @@
+## Revision of code 27.04.2024 - Release 3 ##  -- > main.py module
+
 import tkinter as tk
 from PIL import Image, ImageTk
 from ultralytics import YOLO
