@@ -1,19 +1,24 @@
 ## Revision of code 27.04.2024 - Release 3 ##  -- > main.py module
 
 from config_kaspi import *
-def select_line_points(video_path,x_resolution,y_resolution):
-    cap = cv2.VideoCapture(video_path)
-    assert cap.isOpened(), "Error reading video file"
+from picamera2 import Picamera2
+def select_line_points(video_path,x_resolution,y_resolution,picam):
+    #cap = cv2.VideoCapture(video_path)
+    #assert cap.isOpened(), "Error reading video file"
 
     # Ustaw domyślne wartości punktów linii
     line_points = [(20, 400), (1080, 400)]
 
     # Wyświetl pierwszą klatkę wideo i pozwól użytkownikowi wybrać punkty
     while True:
-        success, frame = cap.read()
-        if not success:
+        frame = picam.capture_array()
+        #frame = frame[:, :, :4]
+        if False:
             print("Unable to read the first frame of the video.")
             break
+   
+    #########################################################################################################
+        
 
         # Wyświetl obraz wideo
         frame = cv2.resize(frame,(x_resolution,y_resolution))

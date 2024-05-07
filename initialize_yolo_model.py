@@ -6,26 +6,30 @@ from openpyxl import Workbook
 from datetime import datetime
 import os
 from result_to_excel import if_excel_exist,save_results_to_excel
+from picamera2 import Picamera2
 project_path = os.getcwd()
+
 excel_file_name = "results1.xlsx"
 excel_file_name2 = "results2.xlsx"
 file_path = os.path.join(project_path, excel_file_name)
 file_path2 = os.path.join(project_path, excel_file_name2)
 
+
+
 # Tworzymy plik Excel, jeśli nie istnieje
 if_excel_exist(file_path)
 if_excel_exist(file_path2)
-def initialize_yolo_model(line_points,video_path,slow_factor,x_resolution,y_resolution):
-
+def initialize_yolo_model(line_points,video_path,slow_factor,x_resolution,y_resolution,picam):
     print("############### START MODULE initialize_yolo_model()  ##############")
 
 ### Initialize model of YOLO ####################
 
     yolo_model = YOLO("yolov8n.pt")
     yolo_model.conf =0.05 ## Reliability of model yolo
-    video_to_process = cv2.VideoCapture(video_path)
-    assert video_to_process.isOpened(), "Please provide a valid video path"
-    w, h, fps = (int(video_to_process.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
+    #video_to_process = cv2.VideoCapture('/dev/video0',cv2.CAP_FFMPEG)
+    #print(video_to_process)
+    #assert video_to_process.isOpened(), "Please provide a valid video path"
+    #w, h, fps = (int(video_to_process.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
     classes_to_count = [0, 2]  # person and car classes for count
 
 
@@ -40,7 +44,8 @@ def initialize_yolo_model(line_points,video_path,slow_factor,x_resolution,y_reso
     #################### Function to slowing down video #################################################
     frame_count=0
     in_counts = []
-    out_counts = []
+    out_counts = [] 
+    '''
     while video_to_process.isOpened():
         success = video_to_process.grab()  # Skip decoding, grab frame only
         if not success:
@@ -50,26 +55,30 @@ def initialize_yolo_model(line_points,video_path,slow_factor,x_resolution,y_reso
             continue
         success, im0 = video_to_process.retrieve()  # Retrieve the grabbed frame and decode it
         if not success:
-            break
+            break 
+            '''
+    while True:
+        im0 = picam.capture_array()
+        #cv2.imshow("Frame",im0)
     #########################################################################################################
-
+        #im0 = im0[:, :, :4]
 
     #############################  TRACKING OBJECT #######################################################################
         im0 = cv2.resize(im0, (x_resolution,y_resolution))
-        tracks = yolo_model.track(im0, persist=True, show=True,
+        tracks = yolo_model.track(im0, stream=False,persist=True, show=False,
                              classes=classes_to_count, verbose=True,conf=yolo_model.conf)
         im0 = counter.start_counting(im0, tracks)
     ######################################################################################################
-        video_duration = f"{frame_count / fps:.2f} seconds"
+        video_duration = 1 #f"{frame_count / fps:.2f} seconds"
         plot_count_object_safe(counter,'perso',1)
         plot_count_object_safe(counter, 'car', 2)
 
-        save_results_to_excel(file_path,counter.class_wise_count['car']['out'],counter.class_wise_count['car']['in'],video_duration)
-        save_results_to_excel(file_path2, counter.class_wise_count['perso']['out'], counter.class_wise_count['perso']['in'],video_duration)
+        #save_results_to_excel(file_path,counter.class_wise_count['car']['out'],counter.class_wise_count['car']['in'],video_duration)
+        #save_results_to_excel(file_path2, counter.class_wise_count['perso']['out'], counter.class_wise_count['perso']['in'],video_duration)
 
 
     #### ENDING OF PROCESS #################
-    video_to_process.release()
+    #video_to_process.release()
     cv2.destroyAllWindows()
     print("########   ###      KONIEC   ###     ###############")
     ###################################################################

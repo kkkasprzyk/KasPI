@@ -23,15 +23,15 @@ print("""
 #     init_thread = threading.Thread(target=select_and_initialize, args=(video_path,))
 #     init_thread.start()
 
-def select_and_initialize(video_path):
-    initialize_yolo_model(select_line_points(video_path,1920,1080),video_path,3,1920,1080)
+def select_and_initialize(video_path,picam):
+    initialize_yolo_model(select_line_points(video_path,1920,1080,picam),video_path,3,1920,1080,picam)
 
 def quit_program(root):
     print("########   ###      KONIEC   ###     ###############")
     sys.exit("Exiting the code with sys.exit()!")
 
 
-def gui_kaspi(video_path):
+def gui_kaspi(video_path,picam):
     # Tworzenie głównego okna
     root = tk.Tk()
     root.title("KasPi 2024")
@@ -44,7 +44,7 @@ def gui_kaspi(video_path):
     root.geometry("800x600")
     # Funkcja do obsługi przycisku Start
     def start_button_click():
-        root.after(0,select_and_initialize,video_path)
+        root.after(0,select_and_initialize,video_path,picam)
 
     # Funkcja do obsługi przycisku Quit
     def quit_button_click():
