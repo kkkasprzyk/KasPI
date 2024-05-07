@@ -24,12 +24,11 @@ print("""
 #     init_thread.start()
 
 def select_and_initialize(video_path):
-    initialize_yolo_model(select_line_points(video_path,1920,1080),video_path,4,1920,1080)
+    initialize_yolo_model(select_line_points(video_path,1920,1080),video_path,3,1920,1080)
 
 def quit_program(root):
     print("########   ###      KONIEC   ###     ###############")
     sys.exit("Exiting the code with sys.exit()!")
-    init_thread
 
 
 def gui_kaspi(video_path):
@@ -45,7 +44,7 @@ def gui_kaspi(video_path):
     root.geometry("800x600")
     # Funkcja do obsługi przycisku Start
     def start_button_click():
-        select_and_initialize(video_path)
+        root.after(0,select_and_initialize,video_path)
 
     # Funkcja do obsługi przycisku Quit
     def quit_button_click():
