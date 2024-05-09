@@ -24,7 +24,7 @@ print("""
 #     init_thread.start()
 
 def select_and_initialize(video_path):
-    initialize_yolo_model(select_line_points(video_path,1920,1080),video_path,3,1920,1080)
+    initialize_yolo_model(select_line_points(video_path,int(1920/2),int(1080/2)),video_path,2,int(1920/2),int(1080/2))
 
 def quit_program(root):
     print("########   ###      KONIEC   ###     ###############")

@@ -1,22 +1,28 @@
 ## Revision of code 27.04.2024 - Release 3 ##  -- > main.py module
-
+from vidgear.gears import CamGear
 from config_kaspi import *
 def select_line_points(video_path,x_resolution,y_resolution):
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), "Error reading video file"
-
+    stream = CamGear(source='https://youtu.be/TfOOzM6mPT4', stream_mode=True,
+                     logging=True).start()  # YouTube Video URL as input
     # Ustaw domyślne wartości punktów linii
     line_points = [(20, 400), (1080, 400)]
 
     # Wyświetl pierwszą klatkę wideo i pozwól użytkownikowi wybrać punkty
     while True:
-        success, frame = cap.read()
-        if not success:
-            print("Unable to read the first frame of the video.")
-            break
+        frame = stream.read()
+        # if not success:
+        #     print("Unable to read the first frame of the video.")
+        #     break
 
         # Wyświetl obraz wideo
-        frame = cv2.resize(frame,(x_resolution,y_resolution))
+        # frame = frame[80:280, 150:330]
+        print(frame.shape)
+        x, y, z, t = map(int, input("Wprowadź dane w formacie 'start:koniec,start:koniec': ").split(','))
+        frame = frame[x:y, z:t]
+        #frame = cv2.resize(frame,(x_resolution,y_resolution))
+
         cv2.imshow('Select Points', frame)
 
         # Czekaj na klawisz 'c' aby kontynuować
@@ -44,5 +50,5 @@ def select_line_points(video_path,x_resolution,y_resolution):
 
     # Zamknij okno z wyborem punktów
     cv2.destroyAllWindows()
-
+    print(line_points)
     return line_points

@@ -6,11 +6,14 @@ from openpyxl import Workbook
 from datetime import datetime
 import os
 from result_to_excel import if_excel_exist,save_results_to_excel
+from vidgear.gears import CamGear
+
 project_path = os.getcwd()
 excel_file_name = "results1.xlsx"
 excel_file_name2 = "results2.xlsx"
 file_path = os.path.join(project_path, excel_file_name)
 file_path2 = os.path.join(project_path, excel_file_name2)
+import numpy as np
 
 # Tworzymy plik Excel, jeśli nie istnieje
 if_excel_exist(file_path)
@@ -22,18 +25,22 @@ def initialize_yolo_model(line_points,video_path,slow_factor,x_resolution,y_reso
 ### Initialize model of YOLO ####################
 
     yolo_model = YOLO("yolov8n.pt")
-    yolo_model.conf =0.05 ## Reliability of model yolo
+    #yolo_model.conf =0.05 ## Reliability of model yolo
+    #yolo_model.predict(imgsz=[100,100])
+    #fourcc = cv2.VideoWriter_fourcc(*'X264')
     video_to_process = cv2.VideoCapture(video_path)
     assert video_to_process.isOpened(), "Please provide a valid video path"
     w, h, fps = (int(video_to_process.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
-    classes_to_count = [0, 2]  # person and car classes for count
+    classes_to_count = [0,1,2,3,5,6,7]  # person and car classes for count
+    print(w,h,fps)
 
-
+    stream = CamGear(source='https://youtu.be/TfOOzM6mPT4', stream_mode=True,
+                     logging=True,Quality=240).start()  # YouTube Video URL as input
     # Init Object Counter
     counter = object_counter.ObjectCounter()
-    counter.set_args(view_img=True,
+    counter.set_args(view_img=True,draw_tracks=False,
                      reg_pts=line_points,
-                     classes_names=yolo_model.names,
+                     classes_names=yolo_model.names, line_thickness=2
                      )
 
 
@@ -41,31 +48,38 @@ def initialize_yolo_model(line_points,video_path,slow_factor,x_resolution,y_reso
     frame_count=0
     in_counts = []
     out_counts = []
-    while video_to_process.isOpened():
-        success = video_to_process.grab()  # Skip decoding, grab frame only
-        if not success:
-            break
-        frame_count+=1
-        if frame_count % slow_factor != 0:
-            continue
-        success, im0 = video_to_process.retrieve()  # Retrieve the grabbed frame and decode it
-        if not success:
-            break
+    while True:#video_to_process.isOpened():
+        #success = video_to_process.grab()  # Skip decoding, grab frame only
+        #if not success:
+         #   break
+        #frame_count+=1
+        #if frame_count % slow_factor != 0:
+         #   continue
+        im0 = stream.read()
+        #video_to_process.retrieve()  # Retrieve the grabbed frame and decode it
+        # if not success:
+        #     break
     #########################################################################################################
 
 
     #############################  TRACKING OBJECT #######################################################################
-        im0 = cv2.resize(im0, (x_resolution,y_resolution))
-        tracks = yolo_model.track(im0, persist=True, show=True,
-                             classes=classes_to_count, verbose=True,conf=yolo_model.conf)
-        im0 = counter.start_counting(im0, tracks)
+        #im0 = cv2.resize(im0, (x_resolution,y_resolution))
+        # Pobieranie danych od użytkownika
+        print(im0.shape)
+        x, y, z, t = map(int, input("Wprowadź dane w formacie 'start:koniec,start:koniec': ").split(','))
+        im0 = im0[x:y,z:t]
+        # Dzielenie danych na fragmenty za pomocą przecinka i dwukropka, a następnie przetworzenie ich na listę
+
+        tracks = yolo_model.track(im0,persist=True, show=False,
+                             classes=classes_to_count)
+        im0 = counter.start_counting(np.ascontiguousarray(im0), tracks)
     ######################################################################################################
         video_duration = f"{frame_count / fps:.2f} seconds"
-        plot_count_object_safe(counter,'perso',1)
-        plot_count_object_safe(counter, 'car', 2)
+ #       plot_count_object_safe(counter,'perso',1)
+#        plot_count_object_safe(counter, 'car', 2)
 
-        save_results_to_excel(file_path,counter.class_wise_count['car']['out'],counter.class_wise_count['car']['in'],video_duration)
-        save_results_to_excel(file_path2, counter.class_wise_count['perso']['out'], counter.class_wise_count['perso']['in'],video_duration)
+        #save_results_to_excel(file_path,counter.class_wise_count['car']['out'],counter.class_wise_count['car']['in'],video_duration)
+        #save_results_to_excel(file_path2, counter.class_wise_count['perso']['out'], counter.class_wise_count['perso']['in'],video_duration)
 
 
     #### ENDING OF PROCESS #################
@@ -77,8 +91,8 @@ def initialize_yolo_model(line_points,video_path,slow_factor,x_resolution,y_reso
 def plot_count_object_safe(counter,object_to_detect,figure):
     try:
         plotter.plotter(counter.class_wise_count[object_to_detect]['in'], counter.class_wise_count[object_to_detect]['out'],object_to_detect,figure)  ## ploting x,y axis graph
-        print(counter.class_wise_count[object_to_detect]['in'],"-in->",object_to_detect)
-        print(counter.class_wise_count[object_to_detect]['out'], "-out->", object_to_detect)
+        # print(counter.class_wise_count[object_to_detect]['in'],"-in->",object_to_detect)
+        # print(counter.class_wise_count[object_to_detect]['out'], "-out->", object_to_detect)
 
     except KeyError:
         print("KeyError->",object_to_detect)
